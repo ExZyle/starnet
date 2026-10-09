@@ -16,10 +16,12 @@ RUN npm ci --omit=dev
 
 FROM node:22-bookworm-slim AS runner
 
-# Install security certificates and dumb-init for clean process signal handling
+# Install security certificates, dumb-init, unzip, and chromium
 RUN apt-get update && apt-get install -y --no-install-recommends \
     ca-certificates \
     dumb-init \
+    unzip \
+    chromium \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
