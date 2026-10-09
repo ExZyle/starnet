@@ -1,0 +1,28 @@
+services:
+  starnet:
+    image: starnet:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: starnet
+    restart: unless-stopped
+    ports:
+      - "8787:8787"
+    volumes:
+      # Persist agent memory, workspaces, transcripts, and spend ledgers
+      # Defaults to named volume 'starnet-data'. To use a local bind mount, set
+      # STARNET_DATA_PATH=./starnet-data in your environment or .env file,
+      # or uncomment the direct bind mount line below:
+      # - ./starnet-data:/home/node/.local/share/ai.skynet.harness
+      - ${STARNET_DATA_PATH:-starnet-data}:/home/node/.local/share/ai.skynet.harness
+    extra_hosts:
+      # Allows connecting to Ollama running on your host machine via host.docker.internal:11434
+      - "host.docker.internal:host-gateway"
+    environment:
+      - NODE_ENV=production
+      - STARNET_HOST=0.0.0.0
+
+volumes:
+  starnet-data:
+    name: starnet_data
+  

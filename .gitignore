@@ -17,6 +17,7 @@ Desktop.ini
 workspaces/
 sidecar/workspaces/
 sidecar/workspaces.*/
+starnet-data/
 # preview/verify sidecar workspaces (per-worktree launch.json SKYNET_WORKSPACES)
 .verify-workspaces/
 .dev-workspaces*/
