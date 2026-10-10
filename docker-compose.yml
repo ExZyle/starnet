@@ -18,6 +18,10 @@ services:
     extra_hosts:
       # Allows connecting to Ollama running on your host machine via host.docker.internal:11434
       - "host.docker.internal:host-gateway"
+      # Podman uses a different host
+      - "host.containers.internal:host-gateway"
+      # Colima also uses a different host
+      - "colima.internal:host-gateway"
     environment:
       - NODE_ENV=production
       - STARNET_HOST=0.0.0.0
