@@ -23980,7 +23980,7 @@ async function handleProviderValidate(req, res) {
       if (!model) return json({ ok: false, provider: id, reachable: true, credentialVerified: false, error: 'no model is available to validate this key' });
       let answered = false;
       for await (const ev of provider.stream({ model, messages: [{ role: 'user', content: 'Reply with OK.' }], signal: ctrl.signal })) {
-        if (ev && ((ev.type === 'text' && ev.delta) || ev.type === 'done')) answered = true;
+        if (ev && ((ev.type === 'text' && ev.delta) || ev.type === 'done' || ev.type === 'reasoning' || ev.type === 'tool_start')) answered = true;
       }
       if (!answered) return json({ ok: false, provider: id, reachable: true, credentialVerified: false, error: 'the endpoint accepted the request but did not answer' });
       return json({ ok: true, provider: id, reachable: true, credentialVerified: true, model });

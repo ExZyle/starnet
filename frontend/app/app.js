@@ -3134,10 +3134,10 @@ const App = (() => {
         msg.textContent = 'this replaces the key already stored on this station. press WAKE again to confirm — or restore the old key to keep it.';
         return false;
       }
+      Harness.setModel(model); Harness.setProv(pickedProvider);
       // Only (re)store when a key was actually typed — desktop keeps the existing keychain key on blank.
       // setKey is async in desktop (writes the keychain + pushes it to the sidecar); await so the run has it.
-      if (key) warnStation(await (Harness.validateAndSetKey ? Harness.validateAndSetKey(key, pickedProvider) : Harness.setKey(key, pickedProvider)));
-      Harness.setModel(model); Harness.setProv(pickedProvider);
+      if (key) warnStation(await (Harness.validateAndSetKey ? Harness.validateAndSetKey(key, pickedProvider, { model, baseUrl }) : Harness.setKey(key, pickedProvider)));
       if (pickedProvider === 'openai') wireVia = key ? 'the OpenAI API key you typed' : 'the OpenAI API key stored on this station';
     }
 
