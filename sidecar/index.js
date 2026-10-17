@@ -424,6 +424,7 @@ const SPECIALIST_CLASSES = (sharedSpecialties.BUILTINS || []).map(s => ({ id: s.
 function ENV(suffix) { const k = 'STARNET_' + suffix; return (k in process.env) ? process.env[k] : process.env['SKYNET_' + suffix]; }
 
 const PORT = Number(ENV('PORT') || process.env.PORT) || 8787;
+const HOST = String(ENV('HOST') || process.env.HOST || '127.0.0.1');
 const API_TOKEN = String(ENV('API_TOKEN') || crypto.randomBytes(32).toString('hex'));
 // DEV fast-path (the `npm run dev:seed` launcher sets this): when on, the served index.html carries a small
 // boot payload (window.__STARNET_DEV__ = {model, prov}) so a fresh browser origin auto-resumes the server-
@@ -632,8 +633,8 @@ if (!workspaceOwnerClaim.ok) {
     console.error('✗ degraded holding listener could not bind :' + PORT + ' (' + String(e && e.code || e) + ') — exiting 73');
     process.exit(73);
   });
-  holding.listen(PORT, '127.0.0.1', () => {
-    console.error('  degraded holding listener on http://127.0.0.1:' + PORT + ' — /api/health answers 503 with the reason; no store is open');
+  holding.listen(PORT, HOST, () => {
+    console.error('  degraded holding listener on http://' + HOST + ':' + PORT + ' — /api/health answers 503 with the reason; no store is open');
   });
   process.on('SIGTERM', () => process.exit(0));
   process.on('SIGINT', () => process.exit(0));
@@ -11568,8 +11569,8 @@ server.on('error', (e) => {
   else console.error('✗ sidecar listen error:', e);
   process.exit(1);
 });
-server.listen(PORT, '127.0.0.1', () => {
-  const url = 'http://127.0.0.1:' + PORT;
+server.listen(PORT, HOST, () => {
+  const url = 'http://' + (HOST === '0.0.0.0' ? '127.0.0.1' : HOST) + ':' + PORT;
   const bar = '═'.repeat(58);
   console.log('\n' + bar);
   console.log('  ▲ STARNET — THE FULL APP IS RUNNING (UI + agent engine).');
