@@ -877,11 +877,14 @@ const Harness = (() => {
 
   // Replace a credential as one user-visible operation: prove the candidate first, then commit it. Validation
   // never mutates provider state, so a rejection/timeout leaves the previous working key untouched.
-  async function validateAndSetKey(key, provider) {
+  async function validateAndSetKey(key, provider, opts) {
+    opts = opts || {};
     const p = normalizeProviderId(provider || getProv());
     const candidate = cleanKey(key);
     if (!candidate) return setKey('', p);
-    const { r, j, text } = await postKeyCheck('/api/providers/validate', { provider: p, key: candidate, baseUrl: getBaseUrl(p) || '', model: p === getProv() ? getModel() : '' });
+    const m = opts.model || (p === getProv() ? getModel() : '');
+    const b = opts.baseUrl || getBaseUrl(p) || '';
+    const { r, j, text } = await postKeyCheck('/api/providers/validate', { provider: p, key: candidate, baseUrl: b, model: m });
     if (!r.ok || !j.credentialVerified) {
       throw new Error(keyCheckFailure(r.status, j, text) + ' — your previous key is unchanged');
     }
